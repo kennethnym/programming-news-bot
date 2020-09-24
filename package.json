@@ -1,0 +1,31 @@
+{
+  "name": "programming-news-bot",
+  "version": "0.1.0",
+  "description": "A discord bot that aggregates programming news articles and blogs found on Reddit and Hacker News",
+  "main": "build/index.js",
+  "author": "Kenneth",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "build": "tsc",
+    "start": "node build/index.js",
+    "start:dev": "yarn build && yarn start"
+  },
+  "dependencies": {
+    "discord.js": "^12.3.1",
+    "dotenv": "^8.2.0",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/node": "^14.11.2",
+    "@types/node-fetch": "^2.5.7",
+    "@typescript-eslint/eslint-plugin": "^4.2.0",
+    "@typescript-eslint/parser": "^4.2.0",
+    "eslint": "^7.9.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.1.2",
+    "typescript": "^4.0.3"
+  }
+}
