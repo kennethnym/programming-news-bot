@@ -1,12 +1,11 @@
 import { Client as DiscordClient, TextChannel } from 'discord.js';
 
+import { CHANNEL_ID } from './constants';
 import * as Reddit from './api/reddit';
 
 type Article = Reddit.Post;
 
-const CHANNEL_ID = '290708802267906049';
-
-/**x
+/**
  * This is used to keep track of articles that have already sent to the channel.
  * Articles will be removed from here if they were added for more than a day.
  */
@@ -21,7 +20,7 @@ function cleanup() {
 }
 
 /**
- * Creates a discord channel message with a givel article
+ * Creates a discord channel message with a given article
  */
 function buildMessageFromArticle(article: Article) {
 	return `${article.title}
@@ -37,12 +36,12 @@ ${article.url}`;
  */
 function checkForArticles(client: DiscordClient) {
 	return async () => {
+		console.log('performing check...');
+
 		cleanup();
 
 		const articles: Article[] = [];
 		const redditPosts = await Reddit.fetchPosts();
-
-		console.log('redditPosts', redditPosts);
 
 		redditPosts.forEach(({ data: post }) => {
 			if (!sentPost.has(`reddit_${post.id}`)) {
@@ -55,8 +54,10 @@ function checkForArticles(client: DiscordClient) {
 			| TextChannel
 			| undefined;
 
-		articles.forEach((article) => {
-			channel?.send(buildMessageFromArticle(article));
+		articles.forEach((article, i) => {
+			setTimeout(() => {
+				channel?.send(buildMessageFromArticle(article));
+			}, 10000 * i);
 		});
 	};
 }

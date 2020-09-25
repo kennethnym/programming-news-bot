@@ -1,4 +1,6 @@
 import { Client as DiscordClient } from 'discord.js';
+
+import { CHECK_INTERVAL } from './constants';
 import checkForArticles from './check-for-articles';
 
 require('dotenv').config();
@@ -20,8 +22,11 @@ async function createClient() {
 async function initialize() {
 	const client = await createClient();
 
+	// run the first check immediately
+	await checkForArticles(client)();
+
 	// check for new articles every hour
-	setInterval(checkForArticles(client), 1000);
+	setInterval(checkForArticles(client), CHECK_INTERVAL);
 }
 
 initialize();
