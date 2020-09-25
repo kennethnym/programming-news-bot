@@ -1,9 +1,8 @@
 import { Client as DiscordClient, TextChannel } from 'discord.js';
 
+import { Article } from './types';
 import { CHANNEL_ID } from './constants';
 import * as Reddit from './api/reddit';
-
-type Article = Reddit.Post;
 
 /**
  * This is used to keep track of articles that have already sent to the channel.
@@ -13,7 +12,7 @@ const sentPost = new Map<string, Article>();
 
 function cleanup() {
 	sentPost.forEach((article, articleID) => {
-		if (Date.now() - article.added_on > 85_400_000) {
+		if (Date.now() - article.addedOn > 85_400_000) {
 			sentPost.delete(articleID);
 		}
 	});
@@ -22,9 +21,12 @@ function cleanup() {
 /**
  * Creates a discord channel message with a given article
  */
-function buildMessageFromArticle(article: Article) {
-	return `${article.title}
-${article.url}`;
+function buildMessageFromArticle({ title, postURL, articleURL }: Article) {
+	return `**Title**: ${title}
+**Original post**: ${postURL}
+**Article link**: ${articleURL}
+_ _
+_ _`;
 }
 
 /**
@@ -44,9 +46,17 @@ function checkForArticles(client: DiscordClient) {
 		const redditPosts = await Reddit.fetchPosts();
 
 		redditPosts.forEach(({ data: post }) => {
+			const article: Article = {
+				addedOn: Date.now(),
+				title: post.title,
+				id: post.id,
+				postURL: `${Reddit.URL}${post.permalink}`,
+				articleURL: post.url,
+			};
+
 			if (!sentPost.has(`reddit_${post.id}`)) {
-				sentPost.set(`reddit_${post.id}`, post);
-				articles.push(post);
+				sentPost.set(`reddit_${post.id}`, article);
+				articles.push(article);
 			}
 		});
 
@@ -57,7 +67,7 @@ function checkForArticles(client: DiscordClient) {
 		articles.forEach((article, i) => {
 			setTimeout(() => {
 				channel?.send(buildMessageFromArticle(article));
-			}, 10000 * i);
+			}, 30000 * i);
 		});
 	};
 }

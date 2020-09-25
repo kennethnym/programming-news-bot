@@ -1,4 +1,11 @@
-// The URL that points to the r/programming subreddit
-const SUBREDDIT_URL = 'https://www.reddit.com/r/programming';
+/**
+ * Reddit's URL
+ */
+const REDDIT_URL = 'https://www.reddit.com';
 
-export { SUBREDDIT_URL };
+/**
+ * The URL that points to r/programming subreddit
+ */
+const SUBREDDIT_URL = `${REDDIT_URL}/r/programming`;
+
+export { REDDIT_URL, SUBREDDIT_URL };
